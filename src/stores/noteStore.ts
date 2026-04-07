@@ -7,10 +7,12 @@ function createNoteStore() {
     notes: Note[];
     loading: boolean;
     error: string | null;
+    activeNoteId: string | null;
   }>({
     notes: [],
     loading: true,
-    error: null
+    error: null,
+    activeNoteId: null
   });
 
   return {
@@ -31,8 +33,22 @@ function createNoteStore() {
       try {
         const notes = await noteService.getNotes();
         const sortedNotes = notes.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-        localStorage.setItem('notes_cache', JSON.stringify(sortedNotes));
-        set({ notes: sortedNotes, loading: false, error: null });
+        
+        const DOCKET_COLORS = [
+          'bg-[#F6A071]', // Peach Orange
+          'bg-[#F5CB6A]', // Yellow Orange
+          'bg-[#B282F3]', // Light Purple
+          'bg-[#D3EE7E]', // Lime Green
+          'bg-[#19D3EA]'  // Cyan
+        ];
+        
+        const colorfulNotes = sortedNotes.map((n, i) => ({
+          ...n,
+          colorTheme: n.colorTheme || DOCKET_COLORS[i % DOCKET_COLORS.length]
+        }));
+
+        localStorage.setItem('notes_cache', JSON.stringify(colorfulNotes));
+        update(state => ({ ...state, notes: colorfulNotes, loading: false, error: null }));
       } catch (err) {
         update(state => {
           const isOffline = !!localStorage.getItem('notes_cache');
@@ -45,12 +61,14 @@ function createNoteStore() {
       }
     },
     addNote: async (data: CreateNoteDTO) => {
+      const DOCKET_COLORS = ['bg-[#F6A071]', 'bg-[#F5CB6A]', 'bg-[#B282F3]', 'bg-[#D3EE7E]', 'bg-[#19D3EA]'];
       const tempId = `temp-${Date.now()}`;
       const tempNote: Note = {
         ...data,
         id: tempId,
         createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
+        colorTheme: DOCKET_COLORS[Math.floor(Math.random() * DOCKET_COLORS.length)]
       };
 
       let rollbackNotes: Note[] = [];
@@ -136,6 +154,12 @@ function createNoteStore() {
           };
         });
       };
+    },
+    setActiveNote: (id: string | null) => {
+      update(state => ({ ...state, activeNoteId: id }));
+    },
+    closeActiveNote: () => {
+      update(state => ({ ...state, activeNoteId: null }));
     }
   };
 }

@@ -6,6 +6,7 @@
   import SearchBar from './components/SearchBar.svelte';
   import SortDropdown from './components/SortDropdown.svelte';
   import ThemeToggle from './components/ThemeToggle.svelte';
+  import Sidebar from './components/Sidebar.svelte';
   import { noteStore } from './stores/noteStore';
   import { toastStore } from './stores/toastStore';
   import type { Note } from './types/note';
@@ -45,7 +46,6 @@
   }
 
   function handleKeydown(event: KeyboardEvent) {
-    // Only trigger if not typing inside an input/textarea (except for Escape)
     const activeEL = document.activeElement;
     const isInputActive = activeEL?.tagName === 'INPUT' || activeEL?.tagName === 'TEXTAREA';
 
@@ -72,42 +72,26 @@
 
 <ToastContainer />
 
-<main class="min-h-screen bg-gray-50 dark:bg-slate-900 text-gray-900 dark:text-gray-100 py-10 px-4 sm:px-6 lg:px-8 relative transition-colors duration-200">
+<div class="h-screen w-full flex bg-[#fafafa] dark:bg-[#0A0A0A] overflow-hidden transition-colors duration-200 text-gray-900 dark:text-gray-100 font-sans">
+  <Sidebar />
+  
+  <main class="flex-1 overflow-y-auto px-10 sm:px-14 lg:px-20 py-16 relative">
+    <div class="absolute top-8 right-8 flex gap-3">
+      <ThemeToggle />
+    </div>
 
-  <div class="max-w-6xl mx-auto">
-    <header class="mb-6 flex flex-col md:flex-row md:justify-between md:items-center gap-4">
-      <div class="flex justify-between items-center w-full md:w-auto">
-        <div>
-          <h1 class="text-xl font-semibold text-gray-900 dark:text-gray-100">My Notes</h1>
-          <p class="mt-0.5 text-xs text-gray-500 dark:text-slate-400 font-medium">Capture your thoughts, ideas, and tasks.</p>
-        </div>
-        <div class="md:hidden">
-          <ThemeToggle />
-        </div>
-      </div>
+    <div class="max-w-[1600px] mx-auto h-full flex flex-col">
+      <h1 class="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-gray-100 mb-12 tracking-tight">Notes</h1>
       
-      <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full md:w-fit">
-        <ThemeToggle />
-        <SortDropdown on:sort={(e) => sortBy = e.detail} />
+      <div class="flex items-center justify-between mb-8">
         <SearchBar on:search={(e) => searchQuery = e.detail} />
-        
-        <button 
-          on:click={openCreateModal}
-          title="New Note (Alt + N)"
-          class="shrink-0 inline-flex items-center justify-center px-3 py-1.5 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-none focus:outline-none focus:ring-2 focus:ring-blue-500/50"
-        >
-          <svg class="w-4 h-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-          </svg>
-          New Note
-          <span class="hidden sm:inline-block ml-2 text-[10px] font-medium bg-blue-700/50 px-1 rounded border border-blue-500/30 text-blue-100">Alt+N</span>
-        </button>
+        <SortDropdown on:sort={(e) => sortBy = e.detail} />
       </div>
-    </header>
 
-    <NoteList on:edit={handleEdit} on:delete={handleDeleteReq} {searchQuery} {sortBy} />
-  </div>
-</main>
+      <NoteList on:edit={handleEdit} on:delete={handleDeleteReq} {searchQuery} {sortBy} />
+    </div>
+  </main>
+</div>
 
 {#if showModal}
   <NoteModal {editingNote} on:close={closeModal} />
@@ -116,7 +100,7 @@
 {#if deletingNote}
   <ConfirmModal 
     title="Delete Note"
-    message="Are you sure you want to delete '{deletingNote.title || 'Untitled'}'? You'll have 10 seconds to undo this action."
+    message="Are you sure you want to delete '{deletingNote.title || 'Untitled'}'?"
     confirmText="Delete"
     on:close={() => deletingNote = null}
     on:confirm={handleConfirmDelete}
@@ -125,9 +109,11 @@
 
 <style>
   :global(body) {
-    background-color: #F8FAFC;
+    background-color: #fafafa;
+    margin: 0;
+    overflow: hidden;
   }
   :global(.dark body) {
-    background-color: #0f172a;
+    background-color: #0A0A0A;
   }
 </style>

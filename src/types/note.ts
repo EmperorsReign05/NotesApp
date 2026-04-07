@@ -4,6 +4,7 @@ export interface Note {
   content: string;
   createdAt: string;
   updatedAt: string;
+  colorTheme?: string;
 }
 
 export type CreateNoteDTO = Omit<Note, 'id' | 'createdAt' | 'updatedAt'>;
