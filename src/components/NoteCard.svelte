@@ -14,7 +14,7 @@
 </script>
 
 <div class="group bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 p-4 hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors cursor-pointer flex flex-col h-full relative">
-  <div class="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm rounded-md shadow-sm border border-gray-200 dark:border-slate-600 p-0.5">
+  <div class="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 bg-white dark:bg-slate-800 rounded-md shadow-sm border border-gray-200 dark:border-slate-600 p-0.5">
     <button 
       type="button"
       class="text-gray-400 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 p-1.5 rounded hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors"

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher, onMount } from 'svelte';
-  import { fade, scale } from 'svelte/transition';
+  import { fade } from 'svelte/transition';
   import { noteStore } from '../stores/noteStore';
   import type { Note } from '../types/note';
 
@@ -57,10 +57,9 @@
 <svelte:window on:keydown={handleKeydown} />
 
 <div class="fixed inset-0 z-50 flex items-center justify-center p-4" in:fade={{ duration: 150 }} out:fade={{ duration: 150 }}>
-  <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
   <div class="absolute inset-0 bg-gray-900/40 backdrop-blur-sm" on:click={close}></div>
 
-  <div class="relative bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-lg overflow-hidden flex flex-col border border-transparent dark:border-slate-700" in:scale={{ start: 0.95, duration: 150 }} out:scale={{ start: 0.95, duration: 150 }}>
+  <div class="relative bg-white dark:bg-slate-800 rounded-lg shadow-xl w-full max-w-lg overflow-hidden flex flex-col border border-gray-200 dark:border-slate-700" in:fade={{ duration: 100 }} out:fade={{ duration: 100 }}>
     <div class="px-6 py-4 border-b border-gray-100 dark:border-slate-700 flex justify-between items-center bg-gray-50/50 dark:bg-slate-800/50">
       <h2 class="text-base font-medium text-gray-900 dark:text-gray-100">{isEditing ? 'Edit Note' : 'Create New Note'}</h2>
       <button class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-none p-1 rounded-md hover:bg-gray-100 dark:hover:bg-slate-700 focus:outline-none" on:click={close}>

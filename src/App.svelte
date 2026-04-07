@@ -72,7 +72,7 @@
 
 <ToastContainer />
 
-<main class="min-h-screen bg-[#F8FAFC] dark:bg-slate-900 text-gray-900 dark:text-gray-100 py-10 px-4 sm:px-6 lg:px-8 relative transition-colors duration-200">
+<main class="min-h-screen bg-gray-50 dark:bg-slate-900 text-gray-900 dark:text-gray-100 py-10 px-4 sm:px-6 lg:px-8 relative transition-colors duration-200">
 
   <div class="max-w-6xl mx-auto">
     <header class="mb-6 flex flex-col md:flex-row md:justify-between md:items-center gap-4">
