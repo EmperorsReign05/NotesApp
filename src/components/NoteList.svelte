@@ -3,6 +3,16 @@
   import { noteStore } from '../stores/noteStore';
   import NoteCard from './NoteCard.svelte';
 
+  export let searchQuery = '';
+
+  $: filteredNotes = $noteStore.notes.filter(note => {
+    if (!searchQuery) return true;
+    const q = searchQuery.toLowerCase();
+    const titleMatch = (note.title || '').toLowerCase().includes(q);
+    const contentMatch = (note.content || '').toLowerCase().includes(q);
+    return titleMatch || contentMatch;
+  });
+
   onMount(() => {
     noteStore.fetchNotes();
   });
@@ -44,17 +54,28 @@
         </svg>
       </div>
       <h3 class="text-lg font-medium text-gray-900">No notes here yet</h3>
-      <p class="text-gray-500 mt-2 text-sm max-w-sm mx-auto">Get started by creating your very first shiny note! It will appear right here.</p>
+      <p class="text-gray-500 mt-2 text-sm max-w-sm mx-auto">Get started by creating your very first shiny note!</p>
+    </div>
+  {:else if filteredNotes.length === 0 && searchQuery}
+    <!-- Search Empty State -->
+    <div class="py-16 px-6 text-center rounded-2xl">
+      <div class="text-gray-300 mb-4">
+        <svg class="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+      </div>
+      <h3 class="text-lg font-medium text-gray-900">No matching notes found</h3>
+      <p class="text-gray-500 mt-1 text-sm max-w-sm mx-auto">Try adjusting your search query.</p>
     </div>
   {:else}
-    <!-- Content State (With potential top banner error if fallback failed optimistic) -->
+    <!-- Content State -->
     {#if $noteStore.error}
       <div class="mb-4 p-3 bg-red-50 text-red-600 rounded-lg text-sm border border-red-100 text-center">
         {$noteStore.error}
       </div>
     {/if}
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      {#each $noteStore.notes as note (note.id)}
+      {#each filteredNotes as note (note.id)}
         <NoteCard {note} on:edit on:delete />
       {/each}
     </div>
