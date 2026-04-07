@@ -1,10 +1,16 @@
 <script lang="ts">
   import NoteList from './components/NoteList.svelte';
   import NoteModal from './components/NoteModal.svelte';
+  import ConfirmModal from './components/ConfirmModal.svelte';
+  import ToastContainer from './components/ToastContainer.svelte';
+  import { noteStore } from './stores/noteStore';
+  import { toastStore } from './stores/toastStore';
   import type { Note } from './types/note';
 
   let showModal = false;
   let editingNote: Note | null = null;
+  
+  let deletingNote: Note | null = null;
 
   function openCreateModal() {
     editingNote = null;
@@ -20,7 +26,25 @@
     showModal = false;
     editingNote = null;
   }
+
+  function handleDeleteReq(event: CustomEvent<Note>) {
+    deletingNote = event.detail;
+  }
+
+  function handleConfirmDelete() {
+    if (!deletingNote) return;
+
+    const undoFn = noteStore.softDeleteNote(deletingNote.id);
+    
+    if (undoFn) {
+      toastStore.addToast('Note moved to trash.', 'undo', undoFn);
+    }
+    
+    deletingNote = null;
+  }
 </script>
+
+<ToastContainer />
 
 <main class="min-h-screen bg-[#F8FAFC] text-gray-900 py-10 px-4 sm:px-6 lg:px-8 relative">
   <div class="max-w-6xl mx-auto">
@@ -41,12 +65,22 @@
       </button>
     </header>
 
-    <NoteList on:edit={handleEdit} />
+    <NoteList on:edit={handleEdit} on:delete={handleDeleteReq} />
   </div>
 </main>
 
 {#if showModal}
   <NoteModal {editingNote} on:close={closeModal} />
+{/if}
+
+{#if deletingNote}
+  <ConfirmModal 
+    title="Delete Note"
+    message="Are you sure you want to delete '{deletingNote.title || 'Untitled'}'? You'll have 10 seconds to undo this action."
+    confirmText="Delete"
+    on:close={() => deletingNote = null}
+    on:confirm={handleConfirmDelete}
+  />
 {/if}
 
 <style>

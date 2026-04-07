@@ -74,6 +74,44 @@ function createNoteStore() {
         update(state => ({ ...state, notes: rollbackNotes, error: 'Failed to update note. Rolled back changes.' }));
         throw err;
       }
+    },
+    softDeleteNote: (id: string, onActualDelete?: () => void) => {
+      let noteToRestore: Note | undefined;
+      
+      // 1. Instantly hide note from UI
+      update(state => {
+        noteToRestore = state.notes.find(n => n.id === id);
+        return {
+          ...state,
+          notes: state.notes.filter(n => n.id !== id)
+        };
+      });
+
+      if (!noteToRestore) return null;
+
+      // 2. Set 10-second timer to call the real API
+      const timeoutId = setTimeout(async () => {
+        try {
+          await noteService.deleteNote(id);
+          if (onActualDelete) onActualDelete();
+        } catch (err) {
+          // If real API delete fails, bring it back and show an error
+          update(state => ({
+            ...state,
+            notes: [noteToRestore!, ...state.notes].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()),
+            error: 'Failed to delete note permanently.'
+          }));
+        }
+      }, 10000);
+
+      // 3. Return an undo function
+      return () => {
+        clearTimeout(timeoutId);
+        update(state => ({
+          ...state,
+          notes: [noteToRestore!, ...state.notes].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+        }));
+      };
     }
   };
 }
