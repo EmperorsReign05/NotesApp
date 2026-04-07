@@ -4,7 +4,7 @@
 
 <button
   type="button"
-  class="shrink-0 flex items-center justify-center p-2.5 rounded-xl bg-white dark:bg-slate-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+  class="shrink-0 flex items-center justify-center p-1.5 rounded-lg bg-white dark:bg-slate-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-none focus:outline-none focus:ring-2 focus:ring-blue-500/50"
   on:click={themeStore.toggle}
   title="Toggle Theme"
 >

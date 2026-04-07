@@ -43,36 +43,64 @@
     }
     deletingNote = null;
   }
+
+  function handleKeydown(event: KeyboardEvent) {
+    // Only trigger if not typing inside an input/textarea (except for Escape)
+    const activeEL = document.activeElement;
+    const isInputActive = activeEL?.tagName === 'INPUT' || activeEL?.tagName === 'TEXTAREA';
+
+    if (event.key === 'Escape') {
+      closeModal();
+      deletingNote = null;
+      return;
+    }
+
+    if (event.altKey && event.key.toLowerCase() === 'n') {
+      event.preventDefault();
+      openCreateModal();
+    }
+
+    if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+      event.preventDefault();
+      const searchInput = document.getElementById('global-search') as HTMLInputElement;
+      if (searchInput) searchInput.focus();
+    }
+  }
 </script>
+
+<svelte:window on:keydown={handleKeydown} />
 
 <ToastContainer />
 
 <main class="min-h-screen bg-[#F8FAFC] dark:bg-slate-900 text-gray-900 dark:text-gray-100 py-10 px-4 sm:px-6 lg:px-8 relative transition-colors duration-200">
+
   <div class="max-w-6xl mx-auto">
-    <header class="mb-10 flex flex-col lg:flex-row lg:justify-between lg:items-end gap-6">
-      <div class="flex justify-between items-start lg:block w-full lg:w-auto">
+    <header class="mb-6 flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+      <div class="flex justify-between items-center w-full md:w-auto">
         <div>
-          <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl text-transparent bg-clip-text bg-gradient-to-r from-blue-700 to-indigo-700 dark:from-blue-400 dark:to-indigo-400">My Notes</h1>
-          <p class="mt-2 text-sm text-gray-500 dark:text-slate-400 font-medium">Capture your thoughts, ideas, and tasks.</p>
+          <h1 class="text-xl font-semibold text-gray-900 dark:text-gray-100">My Notes</h1>
+          <p class="mt-0.5 text-xs text-gray-500 dark:text-slate-400 font-medium">Capture your thoughts, ideas, and tasks.</p>
         </div>
-        <div class="lg:hidden">
+        <div class="md:hidden">
           <ThemeToggle />
         </div>
       </div>
       
-      <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full lg:w-fit">
+      <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full md:w-fit">
         <ThemeToggle />
         <SortDropdown on:sort={(e) => sortBy = e.detail} />
         <SearchBar on:search={(e) => searchQuery = e.detail} />
         
         <button 
           on:click={openCreateModal}
-          class="shrink-0 inline-flex items-center justify-center px-5 py-2.5 text-sm font-semibold text-white bg-blue-600 rounded-xl hover:bg-blue-700 transition-all shadow-sm hover:shadow active:scale-95 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          title="New Note (Alt + N)"
+          class="shrink-0 inline-flex items-center justify-center px-3 py-1.5 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-none focus:outline-none focus:ring-2 focus:ring-blue-500/50"
         >
-          <svg class="w-5 h-5 mr-1.5 -ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg class="w-4 h-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
           </svg>
           New Note
+          <span class="hidden sm:inline-block ml-2 text-[10px] font-medium bg-blue-700/50 px-1 rounded border border-blue-500/30 text-blue-100">Alt+N</span>
         </button>
       </div>
     </header>

@@ -17,17 +17,34 @@ function createNoteStore() {
     subscribe,
     fetchNotes: async () => {
       update(state => ({ ...state, loading: true, error: null }));
+      
+      // Setup minimal offline cache layer
+      try {
+        const cached = localStorage.getItem('notes_cache');
+        if (cached) {
+          update(state => ({ ...state, notes: JSON.parse(cached), loading: false }));
+        }
+      } catch (e) {
+        console.error('Error parsing cache', e);
+      }
+
       try {
         const notes = await noteService.getNotes();
-        // Since the latest mockAPI might bring newest at the bottom depending on sorting, we reverse it to newest first.
         const sortedNotes = notes.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        localStorage.setItem('notes_cache', JSON.stringify(sortedNotes));
         set({ notes: sortedNotes, loading: false, error: null });
       } catch (err) {
-        update(state => ({ ...state, loading: false, error: err instanceof Error ? err.message : 'Unknown error' }));
+        update(state => {
+          const isOffline = !!localStorage.getItem('notes_cache');
+          return { 
+            ...state, 
+            loading: false, 
+            error: isOffline ? 'You are currently offline. Viewing cached notes.' : (err instanceof Error ? err.message : 'Unknown error') 
+          };
+        });
       }
     },
     addNote: async (data: CreateNoteDTO) => {
-      // 1. Optimistic UI update
       const tempId = `temp-${Date.now()}`;
       const tempNote: Note = {
         ...data,
@@ -39,21 +56,23 @@ function createNoteStore() {
       let rollbackNotes: Note[] = [];
       update(state => {
         rollbackNotes = state.notes;
-        return { ...state, notes: [tempNote, ...state.notes] }; // Add to top optimistically
+        const newNotes = [tempNote, ...state.notes];
+        localStorage.setItem('notes_cache', JSON.stringify(newNotes));
+        return { ...state, notes: newNotes };
       });
 
-      // 2. Actual API Call
       try {
-        const savedNote = await noteService.createNote(data); // Call MockAPI
-        
-        // 3. Replace tempnote with server-returned note (has correct server ID)
-        update(state => ({
-          ...state,
-          notes: state.notes.map(n => n.id === tempId ? savedNote : n)
-        }));
+        const savedNote = await noteService.createNote(data); 
+        update(state => {
+          const newNotes = state.notes.map(n => n.id === tempId ? savedNote : n);
+          localStorage.setItem('notes_cache', JSON.stringify(newNotes));
+          return { ...state, notes: newNotes };
+        });
       } catch (err) {
-        // 4. Rollback if error occurs
-        update(state => ({ ...state, notes: rollbackNotes, error: 'Failed to create note. Rolled back changes.' }));
+        update(state => {
+          localStorage.setItem('notes_cache', JSON.stringify(rollbackNotes));
+          return { ...state, notes: rollbackNotes, error: 'Failed to create note. Rolled back changes.' };
+        });
         throw err;
       }
     },
@@ -62,55 +81,60 @@ function createNoteStore() {
       
       update(state => {
         rollbackNotes = state.notes;
-        return {
-          ...state,
-          notes: state.notes.map(n => n.id === id ? { ...n, ...data, updatedAt: new Date().toISOString() } : n)
-        };
+        const newNotes = state.notes.map(n => n.id === id ? { ...n, ...data, updatedAt: new Date().toISOString() } : n);
+        localStorage.setItem('notes_cache', JSON.stringify(newNotes));
+        return { ...state, notes: newNotes };
       });
 
       try {
         await noteService.updateNote(id, data);
       } catch (err) {
-        update(state => ({ ...state, notes: rollbackNotes, error: 'Failed to update note. Rolled back changes.' }));
+        update(state => {
+          localStorage.setItem('notes_cache', JSON.stringify(rollbackNotes));
+          return { ...state, notes: rollbackNotes, error: 'Failed to update note. Rolled back changes.' };
+        });
         throw err;
       }
     },
     softDeleteNote: (id: string, onActualDelete?: () => void) => {
       let noteToRestore: Note | undefined;
       
-      // 1. Instantly hide note from UI
       update(state => {
         noteToRestore = state.notes.find(n => n.id === id);
-        return {
-          ...state,
-          notes: state.notes.filter(n => n.id !== id)
-        };
+        const newNotes = state.notes.filter(n => n.id !== id);
+        localStorage.setItem('notes_cache', JSON.stringify(newNotes));
+        return { ...state, notes: newNotes };
       });
 
       if (!noteToRestore) return null;
 
-      // 2. Set 10-second timer to call the real API
       const timeoutId = setTimeout(async () => {
         try {
           await noteService.deleteNote(id);
           if (onActualDelete) onActualDelete();
         } catch (err) {
-          // If real API delete fails, bring it back and show an error
-          update(state => ({
-            ...state,
-            notes: [noteToRestore!, ...state.notes].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()),
-            error: 'Failed to delete note permanently.'
-          }));
+          update(state => {
+            const restoredNotes = [noteToRestore!, ...state.notes].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+            localStorage.setItem('notes_cache', JSON.stringify(restoredNotes));
+            return {
+              ...state,
+              notes: restoredNotes,
+              error: 'Failed to delete note permanently.'
+            };
+          });
         }
       }, 10000);
 
-      // 3. Return an undo function
       return () => {
         clearTimeout(timeoutId);
-        update(state => ({
-          ...state,
-          notes: [noteToRestore!, ...state.notes].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-        }));
+        update(state => {
+          const restoredNotes = [noteToRestore!, ...state.notes].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+          localStorage.setItem('notes_cache', JSON.stringify(restoredNotes));
+          return {
+            ...state,
+            notes: restoredNotes
+          };
+        });
       };
     }
   };

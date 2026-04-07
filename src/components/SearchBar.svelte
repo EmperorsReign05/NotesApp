@@ -22,9 +22,13 @@
     </svg>
   </div>
   <input
+    id="global-search"
     type="text"
     bind:value={query}
-    class="block w-full pl-9 pr-3 py-2.5 border border-gray-200 dark:border-slate-700 rounded-xl leading-5 bg-white dark:bg-slate-800 placeholder-gray-400 dark:placeholder-slate-500 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:focus:border-blue-500 sm:text-sm transition-all shadow-sm"
+    class="block w-full pl-9 pr-14 py-2.5 border border-gray-200 dark:border-slate-700 rounded-xl leading-5 bg-white dark:bg-slate-800 placeholder-gray-400 dark:placeholder-slate-500 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:focus:border-blue-500 sm:text-sm transition-all shadow-sm"
     {placeholder}
   />
+  <div class="absolute inset-y-0 right-0 pr-2 flex items-center pointer-events-none">
+    <kbd class="hidden sm:inline-flex items-center justify-center px-1.5 py-0.5 text-[10px] font-bold tracking-wider text-gray-400 dark:text-slate-400 border border-gray-200 dark:border-slate-600 rounded bg-gray-50 dark:bg-slate-700 shadow-sm">CTRL+K</kbd>
+  </div>
 </div>
