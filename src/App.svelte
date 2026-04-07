@@ -1,6 +1,7 @@
 <script lang="ts">
   import NoteList from './components/NoteList.svelte';
   import NoteModal from './components/NoteModal.svelte';
+  import NoteViewModal from './components/NoteViewModal.svelte';
   import ConfirmModal from './components/ConfirmModal.svelte';
   import ToastContainer from './components/ToastContainer.svelte';
   import SearchBar from './components/SearchBar.svelte';
@@ -14,8 +15,23 @@
   let showModal = false;
   let editingNote: Note | null = null;
   let deletingNote: Note | null = null;
+  let viewingNote: Note | null = null;
   let searchQuery = '';
   let sortBy = 'date-desc';
+
+  function handleView(event: CustomEvent<Note>) {
+    viewingNote = event.detail;
+  }
+
+  function handleEditFromView(event: CustomEvent<Note>) {
+    viewingNote = null;
+    handleEdit(event);
+  }
+
+  function handleDeleteFromView(event: CustomEvent<Note>) {
+    viewingNote = null;
+    handleDeleteReq(event);
+  }
 
   function openCreateModal() {
     editingNote = null;
@@ -52,6 +68,7 @@
     if (event.key === 'Escape') {
       closeModal();
       deletingNote = null;
+      viewingNote = null;
       return;
     }
 
@@ -88,13 +105,22 @@
         <SortDropdown on:sort={(e) => sortBy = e.detail} />
       </div>
 
-      <NoteList on:edit={handleEdit} on:delete={handleDeleteReq} {searchQuery} {sortBy} />
+      <NoteList on:view={handleView} on:edit={handleEdit} on:delete={handleDeleteReq} {searchQuery} {sortBy} />
     </div>
   </main>
 </div>
 
 {#if showModal}
   <NoteModal {editingNote} on:close={closeModal} />
+{/if}
+
+{#if viewingNote}
+  <NoteViewModal 
+    note={viewingNote} 
+    on:close={() => viewingNote = null} 
+    on:edit={handleEditFromView}
+    on:delete={handleDeleteFromView}
+  />
 {/if}
 
 {#if deletingNote}

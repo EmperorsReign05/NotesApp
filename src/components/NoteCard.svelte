@@ -13,7 +13,7 @@
   });
 </script>
 
-<div class="group {note.colorTheme || 'bg-[#F5CB6A]'} rounded-[24px] p-6 lg:p-8 min-h-[220px] transition-transform hover:-translate-y-1 cursor-pointer flex flex-col h-full relative shadow-sm hover:shadow-md">
+<div class="group {note.colorTheme || 'bg-[#F5CB6A]'} rounded-[24px] p-6 lg:p-8 min-h-[220px] transition-transform hover:-translate-y-1 cursor-pointer flex flex-col h-full relative shadow-sm hover:shadow-md" on:click={() => dispatch('view', note)} on:keydown={(e) => e.key === 'Enter' && dispatch('view', note)} role="button" tabindex="0">
   
   <h3 class="text-xl lg:text-2xl font-bold text-gray-900 mb-2 truncate pr-16">{note.title || 'Untitled Note'}</h3>
   <p class="text-[15px] text-gray-800/80 line-clamp-4 leading-relaxed whitespace-pre-wrap flex-grow pr-12">{note.content}</p>

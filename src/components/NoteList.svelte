@@ -119,7 +119,7 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       {#each paginatedNotes as note (note.id)}
         <div animate:flip={{ duration: 400, easing: quintOut }} in:scale={{ duration: 400, start: 0.8, easing: quintOut }} out:scale={{ duration: 200, start: 0.8 }}>
-          <NoteCard {note} on:edit on:delete />
+          <NoteCard {note} on:view on:edit on:delete />
         </div>
       {/each}
     </div>
