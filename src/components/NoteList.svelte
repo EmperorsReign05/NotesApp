@@ -1,0 +1,70 @@
+<script lang="ts">
+  import { onMount } from 'svelte';
+  import { noteService } from '../services/noteService';
+  import type { Note } from '../types/note';
+  import NoteCard from './NoteCard.svelte';
+
+  let notes: Note[] = [];
+  let loading = true;
+  let error: string | null = null;
+
+  onMount(async () => {
+    try {
+      // Small artificial delay to prove the loading skeleton looks good
+      await new Promise(r => setTimeout(r, 600)); 
+      notes = await noteService.getNotes();
+    } catch (e) {
+      error = e instanceof Error ? e.message : 'Failed to fetch notes';
+    } finally {
+      loading = false;
+    }
+  });
+</script>
+
+<div class="w-full mt-6">
+  {#if loading}
+    <!-- Loading Skeletons -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {#each Array(6) as _}
+        <div class="bg-white rounded-xl border border-gray-100 p-5 animate-pulse h-48 flex flex-col">
+          <div class="h-6 bg-gray-200 rounded w-3/4 mb-4"></div>
+          <div class="space-y-2 flex-grow">
+            <div class="h-3 bg-gray-200 rounded w-full"></div>
+            <div class="h-3 bg-gray-200 rounded w-5/6"></div>
+            <div class="h-3 bg-gray-200 rounded w-4/6"></div>
+          </div>
+          <div class="mt-4 pt-4 border-t border-gray-50 h-3 bg-gray-200 rounded w-1/4"></div>
+        </div>
+      {/each}
+    </div>
+  {:else if error}
+    <!-- Error State -->
+    <div class="p-6 bg-red-50 text-red-600 rounded-xl text-center border border-red-100">
+      <div class="text-red-400 mb-2">
+        <svg class="mx-auto h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        </svg>
+      </div>
+      <p class="font-medium">Error loading notes</p>
+      <p class="text-sm mt-1">{error}</p>
+    </div>
+  {:else if notes.length === 0}
+    <!-- Empty State -->
+    <div class="py-16 px-6 text-center border-2 border-dashed border-gray-200 rounded-2xl bg-white/50 backdrop-blur-sm">
+      <div class="text-gray-300 mb-4">
+        <svg class="mx-auto h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+      </div>
+      <h3 class="text-lg font-medium text-gray-900">No notes here yet</h3>
+      <p class="text-gray-500 mt-2 text-sm max-w-sm mx-auto">Get started by creating your very first shiny note! It will appear right here.</p>
+    </div>
+  {:else}
+    <!-- Content State -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {#each notes as note (note.id)}
+        <NoteCard {note} />
+      {/each}
+    </div>
+  {/if}
+</div>
