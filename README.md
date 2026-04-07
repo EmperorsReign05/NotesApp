@@ -1,11 +1,10 @@
 5c240fb848c253b338c834d18c58be97e956c23ff0f260a6d66f0b283eb15b03
 
 # Notes App
-
-A beautifully modern and responsive note-taking application inspired by Docket. Built with Svelte, TailwindCSS, and a massive focus on user experience and code quality.
+A modern and responsive note-taking application inspired by Docket. Built with Svelte, TailwindCSS, and a massive focus on user experience and code quality.
 
 ## Live Demo
-[View Deployed App on Netlify](https://)
+[View Deployed App on Netlify](https://notes-app-emperor.netlify.app/)
 
 ## Features
 
@@ -28,7 +27,7 @@ I designed the app drawing inspiration from "Dynamic Dockets." When you create a
 ### How to Run Locally
 
 1. Clone the repository: `git clone https://github.com/EmperorsReign05/NotesApp.git`
-2. Enter the directory: `cd docket-note`
+2. Enter the directory: `cd NotesApp`
 3. Install dependencies: `npm install`
 4. Start the development server: `npm run dev`
 
