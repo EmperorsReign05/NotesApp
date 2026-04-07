@@ -1,5 +1,8 @@
 <script lang="ts">
   import { onMount, tick } from 'svelte';
+  import { flip } from 'svelte/animate';
+  import { scale, fly } from 'svelte/transition';
+  import { quintOut } from 'svelte/easing';
   import { noteStore } from '../stores/noteStore';
   import NoteCard from './NoteCard.svelte';
   import Pagination from './Pagination.svelte';
@@ -115,7 +118,9 @@
     {/if}
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       {#each paginatedNotes as note (note.id)}
-        <NoteCard {note} on:edit on:delete />
+        <div animate:flip={{ duration: 400, easing: quintOut }} in:scale={{ duration: 400, start: 0.8, easing: quintOut }} out:scale={{ duration: 200, start: 0.8 }}>
+          <NoteCard {note} on:edit on:delete />
+        </div>
       {/each}
     </div>
 
