@@ -37,9 +37,9 @@
     </button>
   </div>
 
-  <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100 mb-1 truncate pr-14">{note.title || 'Untitled Note'}</h3>
-  <p class="text-gray-600 dark:text-gray-400 line-clamp-3 mb-4 text-sm leading-normal whitespace-pre-wrap flex-grow">{note.content}</p>
-  <div class="flex justify-between items-center text-xs text-gray-500 dark:text-slate-500 mt-auto pt-3 border-t border-gray-100 dark:border-slate-700/50">
+  <h3 class="text-sm font-medium text-gray-900 dark:text-gray-100 mb-1 truncate pr-14">{note.title || 'Untitled Note'}</h3>
+  <p class="text-sm text-gray-500 dark:text-gray-400 line-clamp-3 mb-4 leading-snug whitespace-pre-wrap flex-grow">{note.content}</p>
+  <div class="flex justify-between items-center text-xs text-gray-400 dark:text-slate-500 mt-auto pt-3 border-t border-gray-100 dark:border-slate-700/50">
     <span>{formattedDate}</span>
   </div>
 </div>

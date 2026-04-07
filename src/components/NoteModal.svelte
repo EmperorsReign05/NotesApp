@@ -62,8 +62,8 @@
 
   <div class="relative bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-lg overflow-hidden flex flex-col border border-transparent dark:border-slate-700" in:scale={{ start: 0.95, duration: 150 }} out:scale={{ start: 0.95, duration: 150 }}>
     <div class="px-6 py-4 border-b border-gray-100 dark:border-slate-700 flex justify-between items-center bg-gray-50/50 dark:bg-slate-800/50">
-      <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">{isEditing ? 'Edit Note' : 'Create New Note'}</h2>
-      <button class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors p-1 rounded-full hover:bg-gray-200/50 dark:hover:bg-slate-700" on:click={close}>
+      <h2 class="text-base font-medium text-gray-900 dark:text-gray-100">{isEditing ? 'Edit Note' : 'Create New Note'}</h2>
+      <button class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-none p-1 rounded-md hover:bg-gray-100 dark:hover:bg-slate-700 focus:outline-none" on:click={close}>
         <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
         </svg>
@@ -81,42 +81,42 @@
       {/if}
 
       <div>
-        <label for="title" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Title</label>
+        <label for="title" class="block text-xs font-medium text-gray-500 dark:text-slate-400 mb-1.5 uppercase tracking-wider">Title</label>
         <input 
           bind:this={titleInput}
           id="title"
           bind:value={title}
           type="text" 
           placeholder="What's this about?"
-          class="w-full px-4 py-2 bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-600 text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:focus:border-blue-500 outline-none transition-all placeholder:text-gray-400 dark:placeholder:text-slate-500"
+          class="w-full px-3 py-2 text-sm bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-600 text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-blue-500/50 outline-none transition-none placeholder:text-gray-400 dark:placeholder:text-slate-500"
           disabled={submitting}
         />
       </div>
 
       <div>
-        <label for="content" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Content</label>
+        <label for="content" class="block text-xs font-medium text-gray-500 dark:text-slate-400 mb-1.5 uppercase tracking-wider">Content</label>
         <textarea 
           id="content"
           bind:value={content}
           rows="6"
           placeholder="Write your beautiful thoughts here..."
-          class="w-full px-4 py-2 bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-600 text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all resize-y placeholder:text-gray-400 dark:placeholder:text-slate-500"
+          class="w-full px-3 py-2 text-sm leading-relaxed bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-600 text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-blue-500/50 outline-none transition-none resize-y placeholder:text-gray-400 dark:placeholder:text-slate-500"
           disabled={submitting}
         ></textarea>
       </div>
 
-      <div class="mt-4 flex justify-end gap-3 pt-2">
+      <div class="mt-4 flex justify-end gap-2 pt-2">
         <button 
           type="button" 
           on:click={close}
-          class="px-5 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-600 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors focus:ring-2 focus:ring-blue-500 outline-none"
+          class="px-4 py-1.5 text-sm font-medium text-gray-600 dark:text-gray-300 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition-none focus:ring-2 focus:ring-blue-500/50 outline-none"
           disabled={submitting}
         >
           Cancel
         </button>
         <button 
           type="submit" 
-          class="px-5 py-2.5 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors shadow-sm disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center min-w-[120px] focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 outline-none"
+          class="px-4 py-1.5 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-none disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center min-w-[100px] focus:ring-2 focus:ring-blue-500/50 outline-none"
           disabled={submitting}
         >
           {#if submitting}
