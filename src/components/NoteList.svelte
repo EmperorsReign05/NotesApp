@@ -1,10 +1,16 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { onMount, tick } from 'svelte';
   import { noteStore } from '../stores/noteStore';
   import NoteCard from './NoteCard.svelte';
+  import Pagination from './Pagination.svelte';
 
   export let searchQuery = '';
+  export let sortBy = 'date-desc';
+  
+  let currentPage = 1;
+  const ITEMS_PER_PAGE = 20;
 
+  // 1. Filtering Phase
   $: filteredNotes = $noteStore.notes.filter(note => {
     if (!searchQuery) return true;
     const q = searchQuery.toLowerCase();
@@ -12,6 +18,39 @@
     const contentMatch = (note.content || '').toLowerCase().includes(q);
     return titleMatch || contentMatch;
   });
+
+  // 2. Sorting Phase
+  $: sortedNotes = [...filteredNotes].sort((a, b) => {
+    switch (sortBy) {
+      case 'title-asc': return (a.title || '').localeCompare(b.title || '');
+      case 'title-desc': return (b.title || '').localeCompare(a.title || '');
+      case 'date-asc': return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+      case 'date-desc': return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      case 'id-asc': return (a.id || '').localeCompare(b.id || '');
+      case 'id-desc': return (b.id || '').localeCompare(a.id || '');
+      default: return 0;
+    }
+  });
+
+  // 3. Pagination Phase
+  $: totalPages = Math.ceil(sortedNotes.length / ITEMS_PER_PAGE);
+
+  // Auto-reset page if bounds change (e.g., searching heavily filters items)
+  $: {
+    if (currentPage > totalPages && totalPages > 0) {
+      tick().then(() => currentPage = 1);
+    }
+  }
+  
+  // Watch search query directly to reset to page 1 on new searches
+  $: if(searchQuery !== undefined) {
+    currentPage = 1;
+  }
+
+  $: paginatedNotes = sortedNotes.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE, 
+    currentPage * ITEMS_PER_PAGE
+  );
 
   onMount(() => {
     noteStore.fetchNotes();
@@ -75,9 +114,12 @@
       </div>
     {/if}
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      {#each filteredNotes as note (note.id)}
+      {#each paginatedNotes as note (note.id)}
         <NoteCard {note} on:edit on:delete />
       {/each}
     </div>
+
+    <!-- Pagination Render -->
+    <Pagination {currentPage} {totalPages} on:pageChange={(e) => currentPage = e.detail} />
   {/if}
 </div>
