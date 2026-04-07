@@ -1,28 +1,15 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { noteService } from '../services/noteService';
-  import type { Note } from '../types/note';
+  import { noteStore } from '../stores/noteStore';
   import NoteCard from './NoteCard.svelte';
 
-  let notes: Note[] = [];
-  let loading = true;
-  let error: string | null = null;
-
-  onMount(async () => {
-    try {
-      // Small artificial delay to prove the loading skeleton looks good
-      await new Promise(r => setTimeout(r, 600)); 
-      notes = await noteService.getNotes();
-    } catch (e) {
-      error = e instanceof Error ? e.message : 'Failed to fetch notes';
-    } finally {
-      loading = false;
-    }
+  onMount(() => {
+    noteStore.fetchNotes();
   });
 </script>
 
 <div class="w-full mt-6">
-  {#if loading}
+  {#if $noteStore.loading && $noteStore.notes.length === 0}
     <!-- Loading Skeletons -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       {#each Array(6) as _}
@@ -37,7 +24,7 @@
         </div>
       {/each}
     </div>
-  {:else if error}
+  {:else if $noteStore.error && $noteStore.notes.length === 0}
     <!-- Error State -->
     <div class="p-6 bg-red-50 text-red-600 rounded-xl text-center border border-red-100">
       <div class="text-red-400 mb-2">
@@ -46,9 +33,9 @@
         </svg>
       </div>
       <p class="font-medium">Error loading notes</p>
-      <p class="text-sm mt-1">{error}</p>
+      <p class="text-sm mt-1">{$noteStore.error}</p>
     </div>
-  {:else if notes.length === 0}
+  {:else if $noteStore.notes.length === 0}
     <!-- Empty State -->
     <div class="py-16 px-6 text-center border-2 border-dashed border-gray-200 rounded-2xl bg-white/50 backdrop-blur-sm">
       <div class="text-gray-300 mb-4">
@@ -60,9 +47,14 @@
       <p class="text-gray-500 mt-2 text-sm max-w-sm mx-auto">Get started by creating your very first shiny note! It will appear right here.</p>
     </div>
   {:else}
-    <!-- Content State -->
+    <!-- Content State (With potential top banner error if fallback failed optimistic) -->
+    {#if $noteStore.error}
+      <div class="mb-4 p-3 bg-red-50 text-red-600 rounded-lg text-sm border border-red-100 text-center">
+        {$noteStore.error}
+      </div>
+    {/if}
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      {#each notes as note (note.id)}
+      {#each $noteStore.notes as note (note.id)}
         <NoteCard {note} />
       {/each}
     </div>
