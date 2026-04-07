@@ -56,6 +56,24 @@ function createNoteStore() {
         update(state => ({ ...state, notes: rollbackNotes, error: 'Failed to create note. Rolled back changes.' }));
         throw err;
       }
+    },
+    editNote: async (id: string, data: Partial<CreateNoteDTO>) => {
+      let rollbackNotes: Note[] = [];
+      
+      update(state => {
+        rollbackNotes = state.notes;
+        return {
+          ...state,
+          notes: state.notes.map(n => n.id === id ? { ...n, ...data, updatedAt: new Date().toISOString() } : n)
+        };
+      });
+
+      try {
+        await noteService.updateNote(id, data);
+      } catch (err) {
+        update(state => ({ ...state, notes: rollbackNotes, error: 'Failed to update note. Rolled back changes.' }));
+        throw err;
+      }
     }
   };
 }

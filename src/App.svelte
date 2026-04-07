@@ -1,11 +1,24 @@
 <script lang="ts">
   import NoteList from './components/NoteList.svelte';
-  import CreateNoteModal from './components/CreateNoteModal.svelte';
+  import NoteModal from './components/NoteModal.svelte';
+  import type { Note } from './types/note';
 
-  let showCreateModal = false;
+  let showModal = false;
+  let editingNote: Note | null = null;
 
-  function toggleCreateModal() {
-    showCreateModal = !showCreateModal;
+  function openCreateModal() {
+    editingNote = null;
+    showModal = true;
+  }
+
+  function handleEdit(event: CustomEvent<Note>) {
+    editingNote = event.detail;
+    showModal = true;
+  }
+
+  function closeModal() {
+    showModal = false;
+    editingNote = null;
   }
 </script>
 
@@ -18,7 +31,7 @@
       </div>
       
       <button 
-        on:click={toggleCreateModal}
+        on:click={openCreateModal}
         class="inline-flex items-center justify-center px-5 py-2.5 text-sm font-semibold text-white bg-blue-600 rounded-xl hover:bg-blue-700 transition-all shadow-sm hover:shadow active:scale-95 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
       >
         <svg class="w-5 h-5 mr-1.5 -ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -28,12 +41,12 @@
       </button>
     </header>
 
-    <NoteList />
+    <NoteList on:edit={handleEdit} />
   </div>
 </main>
 
-{#if showCreateModal}
-  <CreateNoteModal on:close={toggleCreateModal} />
+{#if showModal}
+  <NoteModal {editingNote} on:close={closeModal} />
 {/if}
 
 <style>
