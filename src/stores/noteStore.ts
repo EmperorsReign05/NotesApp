@@ -68,7 +68,7 @@ function createNoteStore() {
         id: tempId,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-        colorTheme: DOCKET_COLORS[Math.floor(Math.random() * DOCKET_COLORS.length)]
+        colorTheme: data.colorTheme || DOCKET_COLORS[Math.floor(Math.random() * DOCKET_COLORS.length)]
       };
 
       let rollbackNotes: Note[] = [];

@@ -15,11 +15,13 @@
   </button>
 
   <div class="flex flex-col gap-5 items-center">
-    <div class="w-2.5 h-2.5 rounded-full bg-[#F5CB6A]"></div>
-    <div class="w-2.5 h-2.5 rounded-full bg-[#F6A071]"></div>
-    <div class="w-2.5 h-2.5 rounded-full bg-[#B282F3]"></div>
-    <div class="w-2.5 h-2.5 rounded-full bg-[#19D3EA]"></div>
-    <div class="w-2.5 h-2.5 rounded-full bg-[#D3EE7E]"></div>
+    {#each ['bg-[#F5CB6A]', 'bg-[#F6A071]', 'bg-[#B282F3]', 'bg-[#19D3EA]', 'bg-[#D3EE7E]'] as color}
+      <button 
+        class="w-3.5 h-3.5 rounded-full {color} hover:scale-[1.3] transition-transform shadow-sm focus:outline-none"
+        title="Create note with this color"
+        on:click={() => noteStore.addNote({ title: '', content: '', colorTheme: color })}
+      ></button>
+    {/each}
   </div>
 
   <button class="mt-auto w-10 h-10 rounded-full bg-gray-50 dark:bg-slate-800 flex items-center justify-center text-gray-400 hover:text-gray-600 transition-colors">
