@@ -57,6 +57,8 @@
 <svelte:window on:keydown={handleKeydown} />
 
 <div class="fixed inset-0 z-50 flex items-center justify-center p-4" in:fade={{ duration: 150 }} out:fade={{ duration: 150 }}>
+  <!-- svelte-ignore a11y-click-events-have-key-events -->
+  <!-- svelte-ignore a11y-no-static-element-interactions -->
   <div class="absolute inset-0 bg-gray-900/40 backdrop-blur-sm" on:click={close}></div>
 
   <div class="relative bg-white dark:bg-slate-800 rounded-lg shadow-xl w-full max-w-lg overflow-hidden flex flex-col border border-gray-200 dark:border-slate-700" in:fade={{ duration: 100 }} out:fade={{ duration: 100 }}>

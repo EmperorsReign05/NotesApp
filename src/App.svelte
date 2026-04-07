@@ -11,6 +11,7 @@
   import { noteStore } from './stores/noteStore';
   import { toastStore } from './stores/toastStore';
   import type { Note } from './types/note';
+  import { onMount } from 'svelte';
 
   let showModal = false;
   let editingNote: Note | null = null;
@@ -18,6 +19,14 @@
   let viewingNote: Note | null = null;
   let searchQuery = '';
   let sortBy = 'date-desc';
+  let currentPath = '/';
+
+  onMount(() => {
+    currentPath = window.location.pathname;
+    window.addEventListener('popstate', () => {
+      currentPath = window.location.pathname;
+    });
+  });
 
   function handleView(event: CustomEvent<Note>) {
     viewingNote = event.detail;
@@ -98,14 +107,27 @@
     </div>
 
     <div class="max-w-[1600px] mx-auto h-full flex flex-col">
-      <h1 class="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-gray-100 mb-12 tracking-tight">Notes</h1>
-      
-      <div class="flex items-center justify-between mb-8">
-        <SearchBar on:search={(e) => searchQuery = e.detail} />
-        <SortDropdown on:sort={(e) => sortBy = e.detail} />
-      </div>
+      {#if currentPath === '/' || currentPath === '/index.html'}
+        <h1 class="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-gray-100 mb-12 tracking-tight">Notes</h1>
+        
+        <div class="flex items-center justify-between mb-8">
+          <SearchBar on:search={(e) => searchQuery = e.detail} />
+          <SortDropdown on:sort={(e) => sortBy = e.detail} />
+        </div>
 
-      <NoteList on:view={handleView} on:edit={handleEdit} on:delete={handleDeleteReq} {searchQuery} {sortBy} />
+        <NoteList on:view={handleView} on:edit={handleEdit} on:delete={handleDeleteReq} {searchQuery} {sortBy} />
+        
+        <footer class="mt-auto pt-16 pb-4 text-center text-sm font-medium text-gray-400 dark:text-slate-600">
+          Created by <a href="https://github.com/EmperorsReign05" target="_blank" rel="noopener noreferrer" class="text-blue-500 hover:text-blue-600 dark:text-blue-400 hover:underline">@EmperorsReign05</a>
+        </footer>
+      {:else}
+        <div class="flex-1 flex flex-col items-center justify-center py-20 text-center">
+          <h1 class="text-[150px] font-bold text-gray-200 dark:text-slate-800 tracking-tighter mb-4 leading-none">404</h1>
+          <h2 class="text-3xl font-semibold text-gray-900 dark:text-white mb-4">Page Not Found</h2>
+          <p class="text-gray-500 dark:text-slate-400 max-w-md mx-auto mb-10">We couldn't find the page you're looking for. It might have been moved or deleted.</p>
+          <button on:click={() => { window.history.pushState({}, '', '/'); currentPath = '/'; }} class="px-8 py-3 bg-[#111] dark:bg-white text-white dark:text-black rounded-full font-medium hover:scale-105 transition-transform shadow-lg">Return to Notes</button>
+        </div>
+      {/if}
     </div>
   </main>
 </div>
