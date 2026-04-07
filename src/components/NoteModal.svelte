@@ -60,10 +60,10 @@
   <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
   <div class="absolute inset-0 bg-gray-900/40 backdrop-blur-sm" on:click={close}></div>
 
-  <div class="relative bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden flex flex-col" in:scale={{ start: 0.95, duration: 150 }} out:scale={{ start: 0.95, duration: 150 }}>
-    <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
-      <h2 class="text-xl font-semibold text-gray-800">{isEditing ? 'Edit Note' : 'Create New Note'}</h2>
-      <button class="text-gray-400 hover:text-gray-600 transition-colors p-1 rounded-full hover:bg-gray-200/50" on:click={close}>
+  <div class="relative bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-lg overflow-hidden flex flex-col border border-transparent dark:border-slate-700" in:scale={{ start: 0.95, duration: 150 }} out:scale={{ start: 0.95, duration: 150 }}>
+    <div class="px-6 py-4 border-b border-gray-100 dark:border-slate-700 flex justify-between items-center bg-gray-50/50 dark:bg-slate-800/50">
+      <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">{isEditing ? 'Edit Note' : 'Create New Note'}</h2>
+      <button class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors p-1 rounded-full hover:bg-gray-200/50 dark:hover:bg-slate-700" on:click={close}>
         <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
         </svg>
@@ -81,26 +81,26 @@
       {/if}
 
       <div>
-        <label for="title" class="block text-sm font-medium text-gray-700 mb-1">Title</label>
+        <label for="title" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Title</label>
         <input 
           bind:this={titleInput}
           id="title"
           bind:value={title}
           type="text" 
           placeholder="What's this about?"
-          class="w-full px-4 py-2 bg-white border border-gray-300 text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all placeholder:text-gray-400"
+          class="w-full px-4 py-2 bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-600 text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:focus:border-blue-500 outline-none transition-all placeholder:text-gray-400 dark:placeholder:text-slate-500"
           disabled={submitting}
         />
       </div>
 
       <div>
-        <label for="content" class="block text-sm font-medium text-gray-700 mb-1">Content</label>
+        <label for="content" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Content</label>
         <textarea 
           id="content"
           bind:value={content}
           rows="6"
           placeholder="Write your beautiful thoughts here..."
-          class="w-full px-4 py-2 bg-white border border-gray-300 text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all resize-y placeholder:text-gray-400"
+          class="w-full px-4 py-2 bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-600 text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all resize-y placeholder:text-gray-400 dark:placeholder:text-slate-500"
           disabled={submitting}
         ></textarea>
       </div>
@@ -109,7 +109,7 @@
         <button 
           type="button" 
           on:click={close}
-          class="px-5 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors focus:ring-2 focus:ring-blue-500 outline-none"
+          class="px-5 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-600 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors focus:ring-2 focus:ring-blue-500 outline-none"
           disabled={submitting}
         >
           Cancel

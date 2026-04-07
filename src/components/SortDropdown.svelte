@@ -16,7 +16,7 @@
   <select 
     bind:value={currentSort} 
     on:change={handleChange}
-    class="block w-full pl-3 pr-10 py-2.5 text-sm border border-gray-200 rounded-xl leading-5 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm transition-all cursor-pointer appearance-none"
+    class="block w-full pl-3 pr-10 py-2.5 text-sm border border-gray-200 dark:border-slate-700 rounded-xl leading-5 bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:focus:border-blue-500 shadow-sm transition-all cursor-pointer appearance-none"
   >
     <option value="date-desc">Newest First</option>
     <option value="date-asc">Oldest First</option>
@@ -25,7 +25,7 @@
     <option value="id-desc">Recently Created</option>
     <option value="id-asc">Oldest Created</option>
   </select>
-  <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-gray-500">
+  <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-gray-500 dark:text-slate-500">
     <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
     </svg>

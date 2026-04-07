@@ -5,6 +5,7 @@
   import ToastContainer from './components/ToastContainer.svelte';
   import SearchBar from './components/SearchBar.svelte';
   import SortDropdown from './components/SortDropdown.svelte';
+  import ThemeToggle from './components/ThemeToggle.svelte';
   import { noteStore } from './stores/noteStore';
   import { toastStore } from './stores/toastStore';
   import type { Note } from './types/note';
@@ -46,15 +47,21 @@
 
 <ToastContainer />
 
-<main class="min-h-screen bg-[#F8FAFC] text-gray-900 py-10 px-4 sm:px-6 lg:px-8 relative">
+<main class="min-h-screen bg-[#F8FAFC] dark:bg-slate-900 text-gray-900 dark:text-gray-100 py-10 px-4 sm:px-6 lg:px-8 relative transition-colors duration-200">
   <div class="max-w-6xl mx-auto">
     <header class="mb-10 flex flex-col lg:flex-row lg:justify-between lg:items-end gap-6">
-      <div>
-        <h1 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl text-transparent bg-clip-text bg-gradient-to-r from-blue-700 to-indigo-700">My Notes</h1>
-        <p class="mt-2 text-sm text-gray-500 font-medium">Capture your thoughts, ideas, and tasks.</p>
+      <div class="flex justify-between items-start lg:block w-full lg:w-auto">
+        <div>
+          <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl text-transparent bg-clip-text bg-gradient-to-r from-blue-700 to-indigo-700 dark:from-blue-400 dark:to-indigo-400">My Notes</h1>
+          <p class="mt-2 text-sm text-gray-500 dark:text-slate-400 font-medium">Capture your thoughts, ideas, and tasks.</p>
+        </div>
+        <div class="lg:hidden">
+          <ThemeToggle />
+        </div>
       </div>
       
       <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full lg:w-fit">
+        <ThemeToggle />
         <SortDropdown on:sort={(e) => sortBy = e.detail} />
         <SearchBar on:search={(e) => searchQuery = e.detail} />
         
@@ -91,5 +98,8 @@
 <style>
   :global(body) {
     background-color: #F8FAFC;
+  }
+  :global(.dark body) {
+    background-color: #0f172a;
   }
 </style>

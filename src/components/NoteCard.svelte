@@ -13,10 +13,10 @@
   });
 </script>
 
-<div class="group bg-white rounded-xl shadow-sm border border-gray-100 p-5 hover:shadow-md transition-shadow flex flex-col h-full relative">
-  <div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 bg-white/90 backdrop-blur-sm rounded-lg shadow-sm border border-gray-100 p-1">
+<div class="group bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 p-5 hover:shadow-md dark:hover:shadow-slate-900/50 transition-shadow flex flex-col h-full relative">
+  <div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm rounded-lg shadow-sm border border-gray-100 dark:border-slate-700 p-1">
     <button 
-      class="text-gray-400 hover:text-blue-600 p-1.5 rounded-md hover:bg-blue-50 transition-colors"
+      class="text-gray-400 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 p-1.5 rounded-md hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors"
       on:click={() => dispatch('edit', note)}
       title="Edit Note"
     >
@@ -25,7 +25,7 @@
       </svg>
     </button>
     <button 
-      class="text-gray-400 hover:text-red-600 p-1.5 rounded-md hover:bg-red-50 transition-colors"
+      class="text-gray-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-red-400 p-1.5 rounded-md hover:bg-red-50 dark:hover:bg-slate-700 transition-colors"
       on:click={() => dispatch('delete', note)}
       title="Delete Note"
     >
@@ -35,9 +35,9 @@
     </button>
   </div>
 
-  <h3 class="text-lg font-semibold text-gray-800 mb-2 truncate pr-8">{note.title || 'Untitled Note'}</h3>
-  <p class="text-gray-600 line-clamp-3 mb-4 text-sm leading-relaxed whitespace-pre-wrap flex-grow">{note.content}</p>
-  <div class="flex justify-between items-center text-xs text-gray-400 mt-auto pt-4 border-t border-gray-50">
+  <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2 truncate pr-8">{note.title || 'Untitled Note'}</h3>
+  <p class="text-gray-600 dark:text-gray-400 line-clamp-3 mb-4 text-sm leading-relaxed whitespace-pre-wrap flex-grow">{note.content}</p>
+  <div class="flex justify-between items-center text-xs text-gray-400 dark:text-slate-500 mt-auto pt-4 border-t border-gray-50 dark:border-slate-700/50">
     <span>{formattedDate}</span>
   </div>
 </div>

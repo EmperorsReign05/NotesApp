@@ -4,8 +4,11 @@ export default {
     "./index.html",
     "./src/**/*.{svelte,js,ts,jsx,tsx}",
   ],
+  darkMode: 'class',
   theme: {
     extend: {},
   },
   plugins: [],
 }
+
+// Trigger reload for Tailwind setup
