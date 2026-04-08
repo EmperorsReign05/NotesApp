@@ -5,8 +5,6 @@ A modern and responsive note-taking application inspired by Docket. Built with S
 
 ## Links
 - **Live Demo:** [View Deployed App on Netlify](https://notes-app-emperor.netlify.app/)
-- **GitHub Repository:** [EmperorsReign05/NotesApp](https://github.com/EmperorsReign05/NotesApp)
-- **Demo Video:** [Watch the 1-3 Minute Walkthrough](YOUR_VIDEO_LINK_HERE)
 
 ![Notes App Demo](demo.png)
 
@@ -50,6 +48,7 @@ I approached this project as though I were building a tier-one internal product.
 
 1. **Client-side vs Server-side search & sort**: I assumed the scale of notes per user would comfortably fit into the application's memory once fetched, allowing lightning-fast filtering and sorting locally instead of relying on round-trip queries to the API. This greatly enhances perceived speed (debounce local search).
 2. **Offline Logic**: With a more robust backend, I'd implement explicit conflict resolution via CRDTs or row-versioning for the offline sync queue. Here, I assumed a "last write wins" approach since only one user context exists.
+3. **Environment Variables Strategy**: Unlike standard production applications where `.env` files are strictly added to `.gitignore`, I explicitly chose to commit the base `.env` file containing the `VITE_API_BASE_URL`. Since this is a public MockAPI URL containing zero sensitive secrets, keeping it in the repo ensures the application works effortlessly out of the box when cloned and run by evaluators.
 
 ## Additional Dependencies
 
