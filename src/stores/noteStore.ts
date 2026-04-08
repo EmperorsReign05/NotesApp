@@ -22,14 +22,28 @@ async function syncQueue() {
   
   localStorage.removeItem('offline_queue'); // clear before process to avoid duplicates if fast offline/online
 
+  const idMap = new Map<string, string>();
+
   for (const op of queue) {
     try {
       if (op.type === 'add') {
-        await noteService.createNote(op.data);
+        const savedNote = await noteService.createNote(op.data);
+        idMap.set(op.id, savedNote.id);
+        
+        // Update local store with the real ID if store is initialized
+        if (noteStore && noteStore.updateLocalId) {
+          noteStore.updateLocalId(op.id, savedNote);
+        }
       } else if (op.type === 'edit') {
-        await noteService.updateNote(op.id, op.data);
+        const realId = idMap.get(op.id) || op.id;
+        if (!realId.startsWith('temp-')) {
+          await noteService.updateNote(realId, op.data);
+        }
       } else if (op.type === 'delete') {
-        await noteService.deleteNote(op.id);
+        const realId = idMap.get(op.id) || op.id;
+        if (!realId.startsWith('temp-')) {
+          await noteService.deleteNote(realId);
+        }
       }
     } catch (e) {
        console.error('Failed to sync operation:', op, e);
@@ -39,6 +53,7 @@ async function syncQueue() {
 
 if (typeof window !== 'undefined') {
   window.addEventListener('online', syncQueue);
+  setTimeout(() => { if (navigator.onLine) syncQueue(); }, 500);
 }
 
 function createNoteStore() {
@@ -87,6 +102,14 @@ function createNoteStore() {
         });
       }
     },
+    updateLocalId: (oldId: string, savedNote: Note) => {
+      update(state => {
+        const newNotes = state.notes.map(n => n.id === oldId ? savedNote : n);
+        const newActiveNoteId = state.activeNoteId === oldId ? savedNote.id : state.activeNoteId;
+        localStorage.setItem('notes_cache', JSON.stringify(newNotes));
+        return { ...state, notes: newNotes, activeNoteId: newActiveNoteId };
+      });
+    },
     addNote: async (data: CreateNoteDTO) => {
       const DOCKET_COLORS = ['bg-[#F6A071]', 'bg-[#F5CB6A]', 'bg-[#B282F3]', 'bg-[#D3EE7E]', 'bg-[#19D3EA]'];
       const tempId = `temp-${Date.now()}`;
@@ -133,10 +156,10 @@ function createNoteStore() {
       });
 
       try {
-        if (!navigator.onLine) throw new Error('Offline');
+        if (!navigator.onLine || id.startsWith('temp-')) throw new Error('Offline or unsynced');
         await noteService.updateNote(id, data);
       } catch (err) {
-        if (!navigator.onLine || (err instanceof TypeError)) {
+        if (!navigator.onLine || id.startsWith('temp-') || (err instanceof TypeError)) {
           enqueueOfflineOp({ type: 'edit', id, data });
         } else {
           update(state => {
@@ -160,11 +183,11 @@ function createNoteStore() {
 
       const timeoutId = setTimeout(async () => {
         try {
-          if (!navigator.onLine) throw new Error('Offline');
+          if (!navigator.onLine || id.startsWith('temp-')) throw new Error('Offline or unsynced');
           await noteService.deleteNote(id);
           if (onActualDelete) onActualDelete();
         } catch (err) {
-          if (!navigator.onLine || (err instanceof TypeError)) {
+          if (!navigator.onLine || id.startsWith('temp-') || (err instanceof TypeError)) {
             enqueueOfflineOp({ type: 'delete', id });
             if (onActualDelete) onActualDelete();
           } else {
