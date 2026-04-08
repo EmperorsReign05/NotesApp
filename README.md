@@ -3,10 +3,14 @@
 # Notes App
 A modern and responsive note-taking application inspired by Docket. Built with Svelte, TailwindCSS, and a massive focus on user experience.
 
+
+https://github.com/user-attachments/assets/7ab758b4-b6df-4c11-9f0d-4ce12694f947
+
+
 ## Links
 - **Live Demo:** [View Deployed App on Netlify](https://notes-app-emperor.netlify.app/)
 
-![Notes App Demo](demo.png)
+
 
 ## Features
 
