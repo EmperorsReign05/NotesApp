@@ -1,10 +1,14 @@
 5c240fb848c253b338c834d18c58be97e956c23ff0f260a6d66f0b283eb15b03
 
 # Notes App
-A modern and responsive note-taking application inspired by Docket. Built with Svelte, TailwindCSS, and a massive focus on user experience and code quality.
+A modern and responsive note-taking application inspired by Docket. Built with Svelte, TailwindCSS, and a massive focus on user experience.
 
-## Live Demo
-[View Deployed App on Netlify](https://notes-app-emperor.netlify.app/)
+## Links
+- **Live Demo:** [View Deployed App on Netlify](https://notes-app-emperor.netlify.app/)
+- **GitHub Repository:** [EmperorsReign05/NotesApp](https://github.com/EmperorsReign05/NotesApp)
+- **Demo Video:** [Watch the 1-3 Minute Walkthrough](YOUR_VIDEO_LINK_HERE)
+
+![Notes App Demo](demo.png)
 
 ## Features
 
@@ -31,10 +35,16 @@ I designed the app drawing inspiration from "Dynamic Dockets." When you create a
 3. Install dependencies: `npm install`
 4. Start the development server: `npm run dev`
 
+### How to Deploy
+
+To deploy to production (e.g., Netlify, Vercel, configuring standard Vite projects):
+1. Build the production app: `npm run build`
+2. The bundled assets will be generated in the `dist` folder.
+3. Serve or upload the `dist` folder to your provider of choice. Since it's a Svelte SPA, ensure your server is configured to rewrite all routes to `index.html` to support client-side routing.
 
 ## Reflection
 
-I approached this assignment as though I were building a tier-one internal product. I initially focused heavily on setting up clean stores (`noteStore.ts` & `toastStore.ts`) to centralize the state management. That structure directly enabled complex features like optimistic UI and offline soft-deletes. The design phase was meticulous, avoiding default CSS frameworks to leverage precise Tailwind utilities and Svelte transitions to craft a delightful user experience. 
+I approached this project as though I were building a tier-one internal product. I initially focused heavily on setting up clean stores (`noteStore.ts` & `toastStore.ts`) to centralize the state management. That structure directly enabled complex features like optimistic UI and offline soft-deletes. The design phase was meticulous, avoiding default CSS frameworks to leverage precise Tailwind utilities and Svelte transitions to craft a delightful user experience. 
 
 ## Trade-offs and Assumptions
 
