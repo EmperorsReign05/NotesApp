@@ -25,7 +25,7 @@ This application successfully implements all prompt requirements and several bon
 - Custom 404 minimal aesthetics page for invalid routes.
 
 ### Additions (The "Docket" Visual Architecture)
-For the required custom additional feature, I focused deeply on **Themed Visual Note Organization** and **Advanced Keyboard Shortcuts**.
+Focused deeply on **Themed Visual Note Organization** and **Advanced Keyboard Shortcuts**.
 I designed the app drawing inspiration from "Dynamic Dockets." When you create a note, it is dynamically assigned a beautifully calibrated pastel gradient "colorTheme". This visually breaks apart a bland grid of notes into a vibrant ecosystem. Furthermore, intuitive navigational shortcuts (like `CTRL+K` to search, or `ALT+N` to jump to note creation, or pressing `ESCAPE` everywhere to close modals) transform the app into a power-user tool.
 
 ## Setup and Deployment
@@ -59,10 +59,4 @@ I approached this project as though I were building a tier-one internal product.
 There were no massive dependencies added beyond Svelte and Tailwind. However, I did rely on native APIs and basic ecosystem utilities.
 - **Vite & PostCSS:** Used to establish a modern, lightning-fast compilation pipeline out of the box. 
 - **eslint-plugin-svelte & svelte-check:** Added to enforce robust typing and linting across `.svelte` files. 
-Beyond this, everything is written from scratch, from the custom debouncer to the accessible custom modal system!
 
-## What I'd Do With More Time
-
-1. **Rich Text Formatting**: Moving beyond a `<textarea>` and implementing a lightweight markdown parser or custom editor for beautiful inline editing.
-2. **Tagging/Folder System**: Giving users an ability to label notes and group them by dynamically generated sidebar folders.
-3. **End-to-End Testing**: Implemented a comprehensive Cypress or Playwright suite covering critical paths like offline synchronization.
